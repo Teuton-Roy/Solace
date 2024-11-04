@@ -29,40 +29,69 @@ class Solution {
     // return ans;
     // }
 
-
     // 2. Top Down Approach -- Recursion + Memoization
     // TC -- O(amount) and SC -- O(N)
     // public static int topDown(int[] coins, int amount, int[] dp) {
-    //     // Base Case
-    //     if (amount == 0)
-    //         return 0;
-    //     if (amount < 0)
-    //         return Integer.MAX_VALUE;
-    //     if (dp[amount] != -1)
-    //         return dp[amount];
+    // // Base Case
+    // if (amount == 0)
+    // return 0;
+    // if (amount < 0)
+    // return Integer.MAX_VALUE;
+    // if (dp[amount] != -1)
+    // return dp[amount];
 
-    //     int mini = Integer.MAX_VALUE;
-    //     for (int i = 0; i < coins.length; i++) {
-    //         int ans = topDown(coins, amount - coins[i], dp);
-    //         if (ans != Integer.MAX_VALUE)
-    //             mini = Math.min(mini, 1 + ans);
-    //     }
-    //     dp[amount] = mini;
-    //     return dp[amount];
+    // int mini = Integer.MAX_VALUE;
+    // for (int i = 0; i < coins.length; i++) {
+    // int ans = topDown(coins, amount - coins[i], dp);
+    // if (ans != Integer.MAX_VALUE)
+    // mini = Math.min(mini, 1 + ans);
+    // }
+    // dp[amount] = mini;
+    // return dp[amount];
     // }
 
     // public static int coinChange(int[] coins, int amount) {
-    //     int n = amount;
-    //     int[] dp = new int[n + 1];
-    //     Arrays.fill(dp, -1);
-    //     int ans = topDown(coins, amount, dp);
-    //     if (ans != Integer.MAX_VALUE)
-    //         return ans;
-    //     return -1;
+    // int n = amount;
+    // int[] dp = new int[n + 1];
+    // Arrays.fill(dp, -1);
+    // int ans = topDown(coins, amount, dp);
+    // if (ans != Integer.MAX_VALUE)
+    // return ans;
+    // return -1;
     // }
 
 
-    
+
+
+    //3.Bottom Up Approach -- Tabulation Method
+    //TC -- O(amount * coins.length) and SC -- O(amount)
+    public static int bottomUp(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        // Base Case
+        dp[0] = 0;
+
+        for (int target = 1; target <= amount; target++) {
+            int mini = Integer.MAX_VALUE;
+            for (int i = 0; i < coins.length; i++) {
+                if (target - coins[i] >= 0) {
+                    int ans = dp[target - coins[i]];
+                    if (ans != Integer.MAX_VALUE)
+                        mini = Math.min(mini, 1 + ans);
+                }
+            }
+            dp[target] = mini;
+        }
+        return dp[amount];
+    }
+
+    public static int coinChange(int[] coins, int amount) {
+        int ans = bottomUp(coins, amount);
+        if (ans != Integer.MAX_VALUE)
+            return ans;
+        return -1;
+    }
+
     public static void main(String[] args) {
         // Main Function
         int[] coins = { 1, 2, 5 };
